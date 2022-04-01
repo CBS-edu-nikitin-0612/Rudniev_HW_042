@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -35,10 +36,12 @@ namespace aditionalTask
         }
         private void CallbackMethod(IAsyncResult asyncResult)
         {
-            if (asyncResult.IsCompleted)
-                label1.Text = "result: completed!";
+            Func<bool> func = (Func<bool>)(asyncResult as AsyncResult).AsyncDelegate;
+            
+            if (func.EndInvoke(asyncResult))
+                label1.Text = "result: successfully!";
             else
-                label1.Text = "result: not completed!";
+                label1.Text = "result: failed!";
         }
 
         private void button1_Click(object sender, EventArgs e)
